@@ -3,13 +3,17 @@ import {
   Client as GoogleMapsClient,
   PlaceInputType,
 } from '@googlemaps/google-maps-services-js';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PlacesService {
-  constructor(private googleMapsClient: GoogleMapsClient) {}
+  constructor(
+    private googleMapsClient: GoogleMapsClient,
+    private configService: ConfigService,
+  ) {}
 
   async findPlaces(text: string) {
-    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiKey = this.configService.get<string>('GOOGLE_MAPS_API_KEY');
     const { data } = await this.googleMapsClient.findPlaceFromText({
       params: {
         input: text,
